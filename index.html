@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页设计</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(-45deg);
+            animation: float 5s infinite;
+        }
+        .heart::before, .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            left: 10px;
+            top: 0;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+        .text-container {
+            position: absolute;
+            text-align: center;
+        }
+        .text-container h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .text-container button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .message {
+            position: absolute;
+            font-size: 2em;
+            opacity: 0;
+            animation: appear 3s forwards;
+        }
+        @keyframes appear {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+        .continue-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .end-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .end-screen h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .end-screen img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-container" id="initial-screen">
+        <h1>汤圆小姐，可否与我再续前缘</h1>
+        <button onclick="startLove()">愿意</button>
+        <button onclick="alert('再考虑考虑叭~写个拒后感')">不愿意</button>
+    </div>
+    <div id="love-screen" style="display: none;">
+        <button class="continue-button" onclick="endScreen()">继续</button>
+    </div>
+    <div id="end-screen" class="end-screen" style="display: none;">
+        <h1>今日份的鲜花</h1>
+        <img src="image/鲜花.jpg" alt="鲜花图片">
+    </div>
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        setInterval(createHeart, 300);
+
+        function startLove() {
+            document.getElementById('initial-screen').style.display = 'none';
+            document.getElementById('love-screen').style.display = 'block';
+            showMessages();
+            setTimeout(() => {
+                document.querySelector('.continue-button').style.display = 'block';
+            }, 5000);
+        }
+
+        function showMessages() {
+            const messages = ["喜欢你", "爱你", "汤圆", "糯叽叽", "想和你再续前缘", "I love you", "大概率事件"];
+            let index = 0;
+            setInterval(() => {
+                const msg = messages[index];
+                const message = document.createElement('div');
+                message.className = 'message';
+                message.innerText = msg;
+                message.style.color = getRandomColor();
+                message.style.left = Math.random() * 100 + 'vw';
+                message.style.top = Math.random() * 100 + 'vh';
+                document.getElementById('love-screen').appendChild(message);
+                setTimeout(() => {
+                    message.remove();
+                }, 3000);
+                index = (index + 1) % messages.length;
+            }, 700);
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function endScreen() {
+            document.getElementById('love-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
